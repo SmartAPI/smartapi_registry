@@ -1,0 +1,65 @@
+openapi: '3.0'
+info:
+  version: 3.0.0
+  title: SmartAPI API
+  description: >-
+    MyGene.info provides simple-to-use REST web services to query/retrieve gene annotation data.
+    It supports all species with known genes and provides always up-to-date gene annotations (updated weekly).
+    Learn more about [MyGene.info](http://mygene.info/).
+  termsOfService: 'http://mygene.info/terms/'
+  contact:
+    name: Chunlei Wu
+    x-role: responsible developer
+    email: help@mygene.info
+    x-id: 'http://orcid.org/0000-0002-2629-6124'
+  x-maturity: production
+  x-implementationLanguage: Python
+externalDocs:
+  description: Find more info here
+  url: 'https://docs.mygene.info'
+x-externalResources:
+  - x-url: 'http://example.org/api/docs'
+    x-type: api documentation
+  - x-url: 'https://doi.org/10.1093/nar/gks1114'
+    x-type: publication
+    x-description: 'BioGPS and MyGene.info: organizing online, gene-centric information'
+  - x-url: 'http://twitter.com/mygeneinfo'
+    x-type: social media
+servers:
+  - url: 'http://dev.smart-api.info/api'
+    description: Development server
+  - url: 'http://smart-api.info/api'
+    description: Production server
+tags:
+    - API
+    - metadata
+    - registry
+
+paths:
+  /metadata/{api_id}:
+    get:
+      tags:
+        - metadata
+      description: Makes gene query and returns matching gene list.
+      x-accessRestriction: fee
+      parameters:
+        - name: api_id
+          in: path
+          description: >-
+            Pass a metadata id, and it returns the saved metadata for the given API,
+            e.g. "a9baab984f6af0021aaece6a163e0cf4".
+            If "all" is passed, return a list of all saved metadata (default first ten,
+            with the pagination controlled by size and from parameters).
+          required: true
+  /query/:
+    get:
+      tags:
+        - query
+      description: Query metadata for matching APIs.
+      parameters:
+        - name: q
+          in: query
+          description: >-
+            Can pass any string as the query term to match any field, e.g. "mygene.info",
+            or pass a fielded query term like "info.contact.name:wu".
+          required: true
