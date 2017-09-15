@@ -44,9 +44,14 @@ paths:
           required: true
           schema:
             type: string
+        - name: meta
+          in: query
+          schema:
+            type: string
+          description: >-
+            include "_meta" and "_id" fields in the response if passed "1" or "true". Default is "false".
         - name: raw
           in: query
-          required: false
           schema:
             type: string
           description: >-
@@ -54,7 +59,6 @@ paths:
             "false".
         - name: fields
           in: query
-          required: false
           schema:
             type: string
           description: >-
@@ -65,26 +69,22 @@ paths:
             string.
         - name: from
           in: query
-          required: false
           schema:
             type: string
           description: >-
             Number of items to be skipped. Combining with "size" parameter, this
             can be used for the pagination of the long result.
-          default: '0'
         - name: size
           in: query
-          required: false
           schema:
             type: string
           description: >-
             The number of items returned in one request. Combining with "from"
             parameter, this can be used for the pagination of the long result.
-          default: '10'
       operationId: ''
       responses:
-        default:
-          description: default response
+        "200":
+          description: successful response
       tags:
         - metadata
   /query/:
@@ -98,9 +98,10 @@ paths:
             "mygene.info", or pass a fielded query term like
             "info.contact.name:wu".
           required: true
+          schema:
+            type: string
         - name: fields
           in: query
-          required: false
           schema:
             type: string
           description: >-
@@ -111,12 +112,14 @@ paths:
             string.
         - name: raw
           in: query
-          required: false
           schema:
             type: string
           description: >-
             return raw metadata document if passed "1" or "true". Default is
             "false".
+      responses:
+        '200':
+          description: default response
   /validate:
     get:
       summary: Validate input SmartAPI metadata
@@ -141,7 +144,6 @@ paths:
       parameters:
         - name: field
           in: query
-          required: false
           schema:
             type: string
           description: >-
@@ -149,17 +151,10 @@ paths:
             numbers.
         - name: size
           in: query
-          required: false
           schema:
             type: string
           description: The maximum number of suggested values to return
-          default: '100'
       operationId: ''
       responses:
         default:
           description: Default response
-security: []
-components:
-  links: {}
-  callbacks: {}
-  schemas: {}
