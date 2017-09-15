@@ -36,7 +36,7 @@ tags:
 paths:
   '/metadata/{api_id}':
     get:
-      summary: ''
+      summary: 'Return matching API metadata'
       description: Return matching API metadata
       parameters:
         - name: api_id
@@ -89,6 +89,7 @@ paths:
         - metadata
   /query/:
     get:
+      summary: Query metadata for matching APIs.
       description: Query metadata for matching APIs.
       parameters:
         - name: q
@@ -123,7 +124,7 @@ paths:
   /validate:
     get:
       summary: Validate input SmartAPI metadata
-      description: ''
+      description: 'Validate input SmartAPI metadata'
       parameters:
         - name: url
           in: query
@@ -139,8 +140,10 @@ paths:
           description: default response
   /suggestion:
     get:
-      summary: ''
-      description: ''
+      summary: 'Return suggested values for a give field.'
+      description: >-
+        Return suggested values from the existing APIs in the registry for a
+        given field.
       parameters:
         - name: field
           in: query
