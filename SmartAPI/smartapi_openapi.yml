@@ -1,22 +1,20 @@
-openapi: '3.0'
+openapi: 3.0.0
 info:
-  version: 3.0.0
+  version: '1.0'
   title: SmartAPI API
-  description: >-
-    MyGene.info provides simple-to-use REST web services to query/retrieve gene annotation data.
-    It supports all species with known genes and provides always up-to-date gene annotations (updated weekly).
-    Learn more about [MyGene.info](http://mygene.info/).
-  termsOfService: 'http://mygene.info/terms/'
+  description: 'This is the API provided from [SmartAPI](http://smart-api.info) application.'
+  termsOfService: 'http://smart-api.info'
   contact:
     name: Chunlei Wu
     x-role: responsible developer
-    email: help@mygene.info
+    email: cwu@scripps.edu
     x-id: 'http://orcid.org/0000-0002-2629-6124'
+    url: 'http://github.com/newgene'
   x-maturity: production
   x-implementationLanguage: Python
 externalDocs:
   description: Find more info here
-  url: 'https://docs.mygene.info'
+  url: 'http://smart-api.info'
 x-externalResources:
   - x-url: 'http://example.org/api/docs'
     x-type: api documentation
@@ -28,38 +26,140 @@ x-externalResources:
 servers:
   - url: 'http://dev.smart-api.info/api'
     description: Development server
+    variables: {}
   - url: 'http://smart-api.info/api'
     description: Production server
 tags:
-    - API
-    - metadata
-    - registry
-
+  - name: api
+  - name: metadata
+  - name: openapi
 paths:
-  /metadata/{api_id}:
+  '/metadata/{api_id}':
     get:
-      tags:
-        - metadata
-      description: Makes gene query and returns matching gene list.
-      x-accessRestriction: fee
+      summary: ''
+      description: Return matching API metadata
       parameters:
         - name: api_id
           in: path
-          description: >-
-            Pass a metadata id, and it returns the saved metadata for the given API,
-            e.g. "a9baab984f6af0021aaece6a163e0cf4".
-            If "all" is passed, return a list of all saved metadata (default first ten,
-            with the pagination controlled by size and from parameters).
           required: true
+          schema:
+            type: string
+        - name: raw
+          in: query
+          required: false
+          schema:
+            type: string
+          description: >-
+            return raw metadata document if passed "1" or "true". Default is
+            "false".
+        - name: fields
+          in: query
+          required: false
+          schema:
+            type: string
+          description: >-
+            You can use this parameter to filter the fields returned from the
+            raw metadata document. Only effective when "raw=1" is passed. E.g.
+            "info.contact.name,servers". Nested fields are supported via dot
+            notation, and multiple fields can be passed as a comma-separated
+            string.
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+          description: >-
+            Number of items to be skipped. Combining with "size" parameter, this
+            can be used for the pagination of the long result.
+          default: '0'
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: string
+          description: >-
+            The number of items returned in one request. Combining with "from"
+            parameter, this can be used for the pagination of the long result.
+          default: '10'
+      operationId: ''
+      responses:
+        default:
+          description: default response
+      tags:
+        - metadata
   /query/:
     get:
-      tags:
-        - query
       description: Query metadata for matching APIs.
       parameters:
         - name: q
           in: query
           description: >-
-            Can pass any string as the query term to match any field, e.g. "mygene.info",
-            or pass a fielded query term like "info.contact.name:wu".
+            Can pass any string as the query term to match any field, e.g.
+            "mygene.info", or pass a fielded query term like
+            "info.contact.name:wu".
           required: true
+        - name: fields
+          in: query
+          required: false
+          schema:
+            type: string
+          description: >-
+            You can use this parameter to filter the fields returned from the
+            raw metadata document. Only effective when "raw=1" is passed. E.g.
+            "info.contact.name,servers". Nested fields are supported via dot
+            notation, and multiple fields can be passed as a comma-separated
+            string.
+        - name: raw
+          in: query
+          required: false
+          schema:
+            type: string
+          description: >-
+            return raw metadata document if passed "1" or "true". Default is
+            "false".
+  /validate:
+    get:
+      summary: Validate input SmartAPI metadata
+      description: ''
+      parameters:
+        - name: url
+          in: query
+          required: true
+          schema:
+            type: string
+          description: >-
+            The full URL of an input SmartAPI metadata to validate. The file
+            format can be either JSON or YAML.
+      operationId: ''
+      responses:
+        '200':
+          description: default response
+  /suggestion:
+    get:
+      summary: ''
+      description: ''
+      parameters:
+        - name: field
+          in: query
+          required: false
+          schema:
+            type: string
+          description: >-
+            An input field to return the suggested values and their occurrence
+            numbers.
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: string
+          description: The maximum number of suggested values to return
+          default: '100'
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+security: []
+components:
+  links: {}
+  callbacks: {}
+  schemas: {}
