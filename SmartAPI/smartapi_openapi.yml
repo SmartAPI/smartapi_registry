@@ -24,11 +24,10 @@ x-externalResources:
   - x-url: 'http://twitter.com/mygeneinfo'
     x-type: social media
 servers:
-  - url: 'http://dev.smart-api.info/api'
-    description: Development server
-    variables: {}
   - url: 'http://smart-api.info/api'
     description: Production server
+  - url: 'http://dev.smart-api.info/api'
+    description: Development server
 tags:
   - name: api
   - name: metadata
