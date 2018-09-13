@@ -3,7 +3,7 @@ info:
   version: '1.0'
   title: SmartAPI API
   description: 'This is the API provided from [SmartAPI](http://smart-api.info) application.'
-  termsOfService: 'http://smart-api.info'
+  termsOfService: 'https://creativecommons.org/licenses/by/4.0/'
   contact:
     name: Chunlei Wu
     x-role: responsible developer
