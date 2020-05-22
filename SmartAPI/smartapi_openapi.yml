@@ -2,19 +2,19 @@ openapi: 3.0.0
 info:
   version: '1.0'
   title: SmartAPI API
-  description: 'This is the API provided from [SmartAPI](http://smart-api.info) application.'
+  description: 'This is the API provided from [SmartAPI](https://smart-api.info) application.'
   termsOfService: 'https://creativecommons.org/licenses/by/4.0/'
   contact:
     name: Chunlei Wu
     x-role: responsible developer
     email: cwu@scripps.edu
-    x-id: 'http://orcid.org/0000-0002-2629-6124'
-    url: 'http://github.com/newgene'
+    x-id: 'https://orcid.org/0000-0002-2629-6124'
+    url: 'https://github.com/newgene'
   x-maturity: production
   x-implementationLanguage: Python
 externalDocs:
   description: Find more info here
-  url: 'http://smart-api.info'
+  url: 'https://smart-api.info'
 x-externalResources:
   - x-url: 'http://example.org/api/docs'
     x-type: api documentation
@@ -24,7 +24,7 @@ x-externalResources:
   - x-url: 'http://twitter.com/mygeneinfo'
     x-type: social media
 servers:
-  - url: 'http://smart-api.info/api'
+  - url: 'https://smart-api.info/api'
     description: Production server
   - url: 'http://dev.smart-api.info/api'
     description: Development server
