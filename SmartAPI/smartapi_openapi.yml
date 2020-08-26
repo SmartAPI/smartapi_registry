@@ -254,15 +254,19 @@ paths:
                           type: string
                           description: The api providing the association, e.g. MyChem.info
                           example: MyChem.info API
-                        smartapi_spec_url:
-                          type: string
-                          description: the url for smartapi specification
-                          example: https://raw.githubusercontent.com/NCATS-Tangerine/translator-api-registry/master/mychem.info/openapi_full.yml
-                        smartapi_ui_url:
-                          type: string
-                          description: the web UI url for the API
-                          example: https://smart-api.info/ui/8f08d1446e0bb9c2b323713ce83e2bd3
-                        smartapi_id:
-                          type: string
-                          description: unique smartapi id for the api
-                          example: 8f08d1446e0bb9c2b323713ce83e2bd3
+                        smartapi:
+                          type: object
+                          description: smartapi related data
+                          properties:
+                            metadata:
+                              type: string
+                              description: the url for smartapi specification
+                              example: https://raw.githubusercontent.com/NCATS-Tangerine/translator-api-registry/master/mychem.info/openapi_full.yml
+                            ui:
+                              type: string
+                              description: the web UI url for the API
+                              example: https://smart-api.info/ui/8f08d1446e0bb9c2b323713ce83e2bd3
+                            id:
+                              type: string
+                              description: unique smartapi id for the api
+                              example: 8f08d1446e0bb9c2b323713ce83e2bd3
