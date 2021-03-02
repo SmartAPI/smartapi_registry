@@ -14,7 +14,8 @@ info:
   x-implementationLanguage: Python
   x-translator:
     component: Utility
-    team: "Service Provider"
+    team:
+      - Service Provider
 externalDocs:
   description: Find more info here
   url: 'https://smart-api.info'
