@@ -176,6 +176,7 @@ paths:
       parameters:
         - name: field
           in: query
+          required: true
           schema:
             type: string
           description: >-
