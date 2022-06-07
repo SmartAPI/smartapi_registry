@@ -10,3 +10,6 @@ APIs:
   - metadata: SmartAPI/smartapi_openapi.yml
     extra:
         - notes: ""
+  - metadata: MetGENE_API/MetGENEAPI_openapi.yml
+    extra:
+        - notes: ""
