@@ -7,9 +7,6 @@
 # or temporay fields, e.g. a "notes". Optional of course.
 
 APIs:
-  - metadata: SmartAPI/smartapi_openapi.yml
-    extra:
-        - notes: ""
   - metadata: MetGENE_API/MetGENEAPI_openapi.yml
     extra:
         - notes: ""
