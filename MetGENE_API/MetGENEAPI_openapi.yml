@@ -63,6 +63,9 @@ paths:
                   KEGG_REACTION_NAME:
                     type: string
                     description: Verbose KEGG reaction name
+                  KEGG_REACTION_EQN:
+                    type: string
+                    description: KEGG Reaction Equation
             text/plain:
               schema:
                 type: string
