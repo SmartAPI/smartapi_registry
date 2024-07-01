@@ -96,7 +96,7 @@ paths:
           description: >-
             The number of items returned in one request. Combining with "from"
             parameter, this can be used for the pagination of the long result.
-      operationId: ''
+      operationId: apiGetMetadata
       responses:
         "200":
           description: successful response
@@ -163,7 +163,7 @@ paths:
           description: >-
             The full URL of an input SmartAPI metadata to validate. The file
             format can be either JSON or YAML.
-      operationId: ''
+      operationId: 'validateGet'
       responses:
         '200':
           description: default response
@@ -187,7 +187,7 @@ paths:
           schema:
             type: string
           description: The maximum number of suggested values to return
-      operationId: ''
+      operationId: suggestGet
       responses:
         default:
           description: Default response
@@ -278,56 +278,12 @@ paths:
           description: BTE option
           example: false
       responses:
-          '200':
+        '200':
           description: Association information including subject, object, predicate, api, provided_by and smartapi info.
           content:
             application/json:
               schema:
-                description: Array of all associations
-                type: array
-                items:
-                  type: object
-                  properties:
-                    subject:
-                      type: string
-                      description: The subject type of the association, e.g. Gene
-                      example: Gene
-                    object:
-                      type: string
-                      description: The object type of the association, e.g. ChemicalSubstance
-                      example: ChemicalSubstance
-                    predicate:
-                      type: string
-                      description: The predicate of the association, e.g. physically_interacts_with
-                      example: physically_interacts_with
-                    provided_by:
-                      type: string
-                      description: The data source providing the association, e.g. ChEMBL
-                      example: ChEMBL
-                    api:
-                      type: object
-                      description: The api providing the association, e.g. MyChem.info
-                      properties:
-                        name:
-                          type: string
-                          description: The api providing the association, e.g. MyChem.info
-                          example: MyChem.info API
-                        smartapi:
-                          type: object
-                          description: smartapi related data
-                          properties:
-                            metadata:
-                              type: string
-                              description: the url for smartapi specification
-                              example: https://raw.githubusercontent.com/NCATS-Tangerine/translator-api-registry/master/mychem.info/openapi_full.yml
-                            ui:
-                              type: string
-                              description: the web UI url for the API
-                              example: https://smart-api.info/ui/8f08d1446e0bb9c2b323713ce83e2bd3
-                            id:
-                              type: string
-                              description: unique smartapi id for the api
-                              example: 8f08d1446e0bb9c2b323713ce83e2bd3
+                $ref: '#/components/schemas/MetakgResponse'
   /metakg/paths/:
     get:
       summary: Query paths in a knowledge graph using MetaKGPathFinder
@@ -349,7 +305,7 @@ paths:
         - in: query
           name: predicate
           schema:
-            ty pe: array
+            type: array
             items:
               type: string
           description: The predicates to consider in the path
@@ -387,47 +343,78 @@ paths:
               enum: ["subject", "object", "predicate", "node", "edge", "all"]
           description: The parts of the knowledge graph to expand
           example: ["subject"]
-    responses:
-      '200':
-        description: The paths in the knowledge graph
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                paths:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      path:
-                        type: array
-                        items:
-                          type: string
-                      edges:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            subject:
-                              type: string
-                            object:
-                              type: string
-                            predicate:
-                              type: string
-                            api:
-                              type: array
-                              items:
+      responses:
+        '200':
+          description: The paths in the knowledge graph
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PathsResponse'
+components:
+  schemas:
+    MetakgResponse:
+      description: Array of all associations
+      type: array
+      items:
+        type: object
+        properties:
+          subject:
+            type: string
+          object:
+            type: string
+          predicate:
+            type: string
+          provided_by:
+            type: string
+          api:
+            type: object
+            properties:
+              name:
+                type: string
+              smartapi:
+                type: object
+                properties:
+                  metadata:
+                    type: string
+                  ui:
+                    type: string
+                  id:
+                    type: string
+    PathsResponse:
+      type: object
+      properties:
+        paths:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: array
+                items:
+                  type: string
+              edges:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    subject:
+                      type: string
+                    object:
+                      type: string
+                    predicate:
+                      type: string
+                    api:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          api:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                              smartapi:
                                 type: object
                                 properties:
-                                  api:
-                                    type: object
-                                    properties:
-                                      name:
-                                        type: string
-                                      smartapi:
-                                        type: object
-                                        properties:
-                                          id:
-                                            type: string
-                                            
+                                  id:
+                                    type: string
