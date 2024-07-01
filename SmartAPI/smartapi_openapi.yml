@@ -50,8 +50,8 @@ paths:
             type: string
           description: >-
             The value can be either the API id (e.g. "27a5b60716c3a401f2c021a5b718c5b1")
-             or the slug name (e.g. "mygene"). You can also pass "all" to get a list of
-             all API metadata (using "from" and "size" for pagination).
+            or the slug name (e.g. "mygene"). You can also pass "all" to get a list of
+            all API metadata (using "from" and "size" for pagination).
         - name: meta
           in: query
           schema:
@@ -208,7 +208,7 @@ paths:
           description: The object type of the association, e.g. ChemicalSubstance
           example: ChemicalSubstance
         - in: query
-          name: predicate
+          name: predicate 
           schema:
             type: string
           description: The predicate of the association, e.g. Gene
@@ -225,8 +225,60 @@ paths:
             type: string
           description: The data source providing the association, e.g. drugbank
           example: drugbank
+        - in: query
+          name: size
+          schema:
+            type: integer
+          description: The size limit for graphml export
+          example: 5000
+        - in: query
+          name: download
+          schema:
+            type: boolean
+          description: Download option
+          example: true
+        - in: query
+          name: expand
+          schema:
+            type: array
+            items:
+              type: string
+              enum: ["subject", "object", "predicate", "node", "edge", "all"]
+          description: Expand options
+          example: ["subject"]
+        - in: query
+          name: default_view
+          schema:
+            type: string
+            enum: ["json", "cytoscape"]
+          description: Default view option
+          example: "cytoscape"
+        - in: query
+          name: header
+          schema:
+            type: boolean
+          description: Header option
+          example: true
+        - in: query
+          name: consolidated
+          schema:
+            type: boolean
+          description: Consolidated option
+          example: true
+        - in: query
+          name: api_details
+          schema:
+            type: boolean
+          description: API details option
+          example: false
+        - in: query
+          name: bte
+          schema:
+            type: boolean
+          description: BTE option
+          example: false
       responses:
-        '200':
+          '200':
           description: Association information including subject, object, predicate, api, provided_by and smartapi info.
           content:
             application/json:
@@ -276,3 +328,106 @@ paths:
                               type: string
                               description: unique smartapi id for the api
                               example: 8f08d1446e0bb9c2b323713ce83e2bd3
+  /metakg/paths/:
+    get:
+      summary: Query paths in a knowledge graph using MetaKGPathFinder
+      parameters:
+        - in: query
+          name: subject
+          schema:
+            type: string
+          required: true
+          description: The subject entity in the knowledge graph
+          example: "ExampleSubject"
+        - in: query
+          name: object
+          schema:
+            type: string
+          required: true
+          description: The object entity in the knowledge graph
+          example: "ExampleObject"
+        - in: query
+          name: predicate
+          schema:
+            ty pe: array
+            items:
+              type: string
+          description: The predicates to consider in the path
+          example: ["ExamplePredicate1", "ExamplePredicate2"]
+        - in: query
+          name: cutoff
+          schema:
+            type: integer
+          description: The maximum length of the paths to retrieve
+          example: 3
+        - in: query
+          name: api_details
+          schema:
+            type: boolean
+          description: Whether to include API details in the response
+          example: false
+        - in: query
+          name: rawquery
+          schema:
+            type: boolean
+          description: Whether to perform a raw query
+          example: false
+        - in: query
+          name: bte
+          schema:
+            type: boolean
+          description: Whether to use the BioThings Explorer
+          example: false
+        - in: query
+          name: expand
+          schema:
+            type: array
+            items:
+              type: string
+              enum: ["subject", "object", "predicate", "node", "edge", "all"]
+          description: The parts of the knowledge graph to expand
+          example: ["subject"]
+    responses:
+      '200':
+        description: The paths in the knowledge graph
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                paths:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      path:
+                        type: array
+                        items:
+                          type: string
+                      edges:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            subject:
+                              type: string
+                            object:
+                              type: string
+                            predicate:
+                              type: string
+                            api:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  api:
+                                    type: object
+                                    properties:
+                                      name:
+                                        type: string
+                                      smartapi:
+                                        type: object
+                                        properties:
+                                          id:
+                                            type: string
+                                            
