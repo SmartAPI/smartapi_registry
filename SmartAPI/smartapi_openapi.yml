@@ -1,420 +1,428 @@
-openapi: 3.0.0
-info:
-  version: '1.0'
-  title: SmartAPI API
-  description: 'This is the API provided from [SmartAPI](https://smart-api.info) application.'
-  termsOfService: 'https://creativecommons.org/licenses/by/4.0/'
-  contact:
-    name: Chunlei Wu
-    x-role: responsible developer
-    email: cwu@scripps.edu
-    x-id: 'https://orcid.org/0000-0002-2629-6124'
-    url: 'https://github.com/newgene'
-  x-maturity: production
-  x-implementationLanguage: Python
-  x-translator:
-    component: Utility
-    team:
-      - Service Provider
-externalDocs:
-  description: Find more info here
-  url: 'https://smart-api.info'
-x-externalResources:
-  - x-url: 'http://example.org/api/docs'
-    x-type: api documentation
-  - x-url: 'https://doi.org/10.1093/nar/gks1114'
-    x-type: publication
-    x-description: 'BioGPS and MyGene.info: organizing online, gene-centric information'
-  - x-url: 'http://twitter.com/mygeneinfo'
-    x-type: social media
-servers:
-  - url: 'https://smart-api.info/api'
-    description: Production server
-  - url: 'http://dev.smart-api.info/api'
-    description: Development server
-tags:
-  - name: api
-  - name: metadata
-  - name: openapi
-  - name: translator
-paths:
-  '/metadata/{api_id}':
-    get:
-      summary: 'Return matching API metadata'
-      description: Return matching API metadata
-      parameters:
-        - name: api_id
-          in: path
-          required: true
-          schema:
-            type: string
-          description: >-
-            The value can be either the API id (e.g. "27a5b60716c3a401f2c021a5b718c5b1")
-            or the slug name (e.g. "mygene"). You can also pass "all" to get a list of
-            all API metadata (using "from" and "size" for pagination).
-        - name: meta
-          in: query
-          schema:
-            type: string
-          description: >-
-            include "_meta" and "_id" fields in the response if passed "1" or "true". Default is "false".
-        - name: raw
-          in: query
-          schema:
-            type: string
-          description: >-
-            return raw metadata document if passed "1" or "true". Default is
-            "false".
-        - name: fields
-          in: query
-          schema:
-            type: string
-          description: >-
-            You can use this parameter to filter the fields returned from the
-            raw metadata document. Only effective when "raw=1" is passed. E.g.
-            "info.contact.name,servers". Nested fields are supported via dot
-            notation, and multiple fields can be passed as a comma-separated
-            string.
-        - name: format
-          in: query
-          schema:
-            type: string
-          description: >-
-            Output format for the return API metadata. The value can be "json"
-            or "yaml". Default is "json".
-        - name: from
-          in: query
-          schema:
-            type: string
-          description: >-
-            Number of items to be skipped. Combining with "size" parameter, this
-            can be used for the pagination of the long result.
-        - name: size
-          in: query
-          schema:
-            type: string
-          description: >-
-            The number of items returned in one request. Combining with "from"
-            parameter, this can be used for the pagination of the long result.
-      operationId: apiGetMetadata
-      responses:
-        "200":
-          description: successful response
-      tags:
-        - metadata
-  /query/:
-    get:
-      summary: Query metadata for matching APIs.
-      description: Query metadata for matching APIs.
-      parameters:
-        - name: q
-          in: query
-          description: >-
-            Can pass any string as the query term to match any field, e.g.
-            "mygene.info", or pass a fielded query term like
-            "info.contact.name:wu".
-          required: true
-          schema:
-            type: string
-        - name: fields
-          in: query
-          schema:
-            type: string
-          description: >-
-            You can use this parameter to filter the fields returned from the
-            raw metadata document. Only effective when "raw=1" is passed. E.g.
-            "info.contact.name,servers". Nested fields are supported via dot
-            notation, and multiple fields can be passed as a comma-separated
-            string.
-        - name: raw
-          in: query
-          schema:
-            type: string
-          description: >-
-            return raw metadata document if passed "1" or "true". Default is
-            "false".
-        - name: from
-          in: query
-          schema:
-            type: string
-          description: >-
-            Number of items to be skipped. Combining with "size" parameter, this
-            can be used for the pagination of the long result.
-        - name: size
-          in: query
-          schema:
-            type: string
-          description: >-
-            The number of items returned in one request. Combining with "from"
-            parameter, this can be used for the pagination of the long result.
-      responses:
-        '200':
-          description: default response
-  /validate:
-    get:
-      summary: Validate input SmartAPI metadata
-      description: 'Validate input SmartAPI metadata'
-      parameters:
-        - name: url
-          in: query
-          required: true
-          schema:
-            type: string
-          description: >-
-            The full URL of an input SmartAPI metadata to validate. The file
-            format can be either JSON or YAML.
-      operationId: 'validateGet'
-      responses:
-        '200':
-          description: default response
-  /suggestion:
-    get:
-      summary: 'Return suggested values for a give field.'
-      description: >-
-        Return suggested values from the existing APIs in the registry for a
-        given field.
-      parameters:
-        - name: field
-          in: query
-          required: true
-          schema:
-            type: string
-          description: >-
-            An input field to return the suggested values and their occurrence
-            numbers.
-        - name: size
-          in: query
-          schema:
-            type: string
-          description: The maximum number of suggested values to return
-      operationId: suggestGet
-      responses:
-        default:
-          description: Default response
-  /metakg:
-    get:
-      summary: retrieve associations within smartapi, if no parameters provided, will return all associations
-      parameters:
-        - in: query
-          name: subject
-          schema:
-            type: string
-          description: The subject type of the association, e.g. Gene
-          example: Gene
-        - in: query
-          name: object
-          schema:
-            type: string
-          description: The object type of the association, e.g. ChemicalSubstance
-          example: ChemicalSubstance
-        - in: query
-          name: predicate 
-          schema:
-            type: string
-          description: The predicate of the association, e.g. Gene
-          example: physically_interacts_with
-        - in: query
-          name: api
-          schema:
-            type: string
-          description: The API providing the association, e.g. MyChem.info API
-          example: MyChem.info API
-        - in: query
-          name: provided_by
-          schema:
-            type: string
-          description: The data source providing the association, e.g. drugbank
-          example: drugbank
-        - in: query
-          name: size
-          schema:
-            type: integer
-          description: The size limit for graphml export
-          example: 5000
-        - in: query
-          name: download
-          schema:
-            type: boolean
-          description: Download option
-          example: true
-        - in: query
-          name: expand
-          schema:
-            type: array
-            items:
+  openapi: 3.1.0
+  info:
+    version: '1.0'
+    title: SmartAPI API
+    description: 'This is the API provided from [SmartAPI](https://smart-api.info) application.'
+    termsOfService: 'https://creativecommons.org/licenses/by/4.0/'
+    contact:
+      name: Chunlei Wu
+      x-role: responsible developer
+      email: cwu@scripps.edu
+      x-id: 'https://orcid.org/0000-0002-2629-6124'
+      url: 'https://github.com/newgene'
+    x-maturity: production
+    x-implementationLanguage: Python
+    x-translator:
+      component: Utility
+      team:
+        - Service Provider
+  externalDocs:
+    description: Find more info here
+    url: 'https://smart-api.info'
+  x-externalResources:
+    - x-url: 'http://example.org/api/docs'
+      x-type: api documentation
+    - x-url: 'https://doi.org/10.1093/nar/gks1114'
+      x-type: publication
+      x-description: 'BioGPS and MyGene.info: organizing online, gene-centric information'
+    - x-url: 'http://twitter.com/mygeneinfo'
+      x-type: social media
+  servers:
+    - url: 'https://smart-api.info/api'
+      description: Production server
+    - url: 'http://dev.smart-api.info/api'
+      description: Development server
+  tags:
+    - name: api
+    - name: metadata
+    - name: openapi
+    - name: translator
+    - name: metakg
+  paths:
+    '/metadata/{api_id}':
+      get:
+        summary: 'Return matching API metadata'
+        description: Return matching API metadata
+        parameters:
+          - name: api_id
+            in: path
+            required: true
+            schema:
               type: string
-              enum: ["subject", "object", "predicate", "node", "edge", "all"]
-          description: Expand options
-          example: ["subject"]
-        - in: query
-          name: default_view
-          schema:
-            type: string
-            enum: ["json", "cytoscape"]
-          description: Default view option
-          example: "cytoscape"
-        - in: query
-          name: header
-          schema:
-            type: boolean
-          description: Header option
-          example: true
-        - in: query
-          name: consolidated
-          schema:
-            type: boolean
-          description: Consolidated option
-          example: true
-        - in: query
-          name: api_details
-          schema:
-            type: boolean
-          description: API details option
-          example: false
-        - in: query
-          name: bte
-          schema:
-            type: boolean
-          description: BTE option
-          example: false
-      responses:
-        '200':
-          description: Association information including subject, object, predicate, api, provided_by and smartapi info.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MetakgResponse'
-  /metakg/paths/:
-    get:
-      summary: Query paths in a knowledge graph using MetaKGPathFinder
-      parameters:
-        - in: query
-          name: subject
-          schema:
-            type: string
-          required: true
-          description: The subject entity in the knowledge graph
-          example: "ExampleSubject"
-        - in: query
-          name: object
-          schema:
-            type: string
-          required: true
-          description: The object entity in the knowledge graph
-          example: "ExampleObject"
-        - in: query
-          name: predicate
-          schema:
-            type: array
-            items:
+            description: >-
+              The value can be either the API id (e.g. "27a5b60716c3a401f2c021a5b718c5b1")
+              or the slug name (e.g. "mygene"). You can also pass "all" to get a list of
+              all API metadata (using "from" and "size" for pagination).
+          - name: meta
+            in: query
+            schema:
               type: string
-          description: The predicates to consider in the path
-          example: ["ExamplePredicate1", "ExamplePredicate2"]
-        - in: query
-          name: cutoff
-          schema:
-            type: integer
-          description: The maximum length of the paths to retrieve
-          example: 3
-        - in: query
-          name: api_details
-          schema:
-            type: boolean
-          description: Whether to include API details in the response
-          example: false
-        - in: query
-          name: rawquery
-          schema:
-            type: boolean
-          description: Whether to perform a raw query
-          example: false
-        - in: query
-          name: bte
-          schema:
-            type: boolean
-          description: Whether to use the BioThings Explorer
-          example: false
-        - in: query
-          name: expand
-          schema:
-            type: array
-            items:
+            description: >-
+              include "_meta" and "_id" fields in the response if passed "1" or "true". Default is "false".
+          - name: raw
+            in: query
+            schema:
               type: string
-              enum: ["subject", "object", "predicate", "node", "edge", "all"]
-          description: The parts of the knowledge graph to expand
-          example: ["subject"]
-      responses:
-        '200':
-          description: The paths in the knowledge graph
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PathsResponse'
-components:
-  schemas:
-    MetakgResponse:
-      description: Array of all associations
-      type: array
-      items:
-        type: object
-        properties:
-          subject:
-            type: string
-          object:
-            type: string
-          predicate:
-            type: string
-          provided_by:
-            type: string
-          api:
-            type: object
-            properties:
-              name:
+            description: >-
+              return raw metadata document if passed "1" or "true". Default is
+              "false".
+          - name: fields
+            in: query
+            schema:
+              type: string
+            description: >-
+              You can use this parameter to filter the fields returned from the
+              raw metadata document. Only effective when "raw=1" is passed. E.g.
+              "info.contact.name,servers". Nested fields are supported via dot
+              notation, and multiple fields can be passed as a comma-separated
+              string.
+          - name: format
+            in: query
+            schema:
+              type: string
+            description: >-
+              Output format for the return API metadata. The value can be "json"
+              or "yaml". Default is "json".
+          - name: from
+            in: query
+            schema:
+              type: string
+            description: >-
+              Number of items to be skipped. Combining with "size" parameter, this
+              can be used for the pagination of the long result.
+          - name: size
+            in: query
+            schema:
+              type: string
+            description: >-
+              The number of items returned in one request. Combining with "from"
+              parameter, this can be used for the pagination of the long result.
+        operationId: apiGetMetadata
+        responses:
+          "200":
+            description: successful response
+        tags:
+          - metadata
+    /query/:
+      get:
+        summary: Query metadata for matching APIs.
+        description: Query metadata for matching APIs.
+        parameters:
+          - name: q
+            in: query
+            description: >-
+              Can pass any string as the query term to match any field, e.g.
+              "mygene.info", or pass a fielded query term like
+              "info.contact.name:wu".
+            required: true
+            schema:
+              type: string
+          - name: fields
+            in: query
+            schema:
+              type: string
+            description: >-
+              You can use this parameter to filter the fields returned from the
+              raw metadata document. Only effective when "raw=1" is passed. E.g.
+              "info.contact.name,servers". Nested fields are supported via dot
+              notation, and multiple fields can be passed as a comma-separated
+              string.
+          - name: raw
+            in: query
+            schema:
+              type: string
+            description: >-
+              return raw metadata document if passed "1" or "true". Default is
+              "false".
+          - name: from
+            in: query
+            schema:
+              type: string
+            description: >-
+              Number of items to be skipped. Combining with "size" parameter, this
+              can be used for the pagination of the long result.
+          - name: size
+            in: query
+            schema:
+              type: string
+            description: >-
+              The number of items returned in one request. Combining with "from"
+              parameter, this can be used for the pagination of the long result.
+        responses:
+          '200':
+            description: default response
+        tags:
+          - metadata
+    /validate:
+      get:
+        summary: Validate input SmartAPI metadata
+        description: 'Validate input SmartAPI metadata'
+        parameters:
+          - name: url
+            in: query
+            required: true
+            schema:
+              type: string
+            description: >-
+              The full URL of an input SmartAPI metadata to validate. The file
+              format can be either JSON or YAML.
+        operationId: 'validateGet'
+        responses:
+          '200':
+            description: default response
+        tags:
+          - metadata
+    /suggestion:
+      get:
+        summary: 'Return suggested values for a give field.'
+        description: >-
+          Return suggested values from the existing APIs in the registry for a
+          given field.
+        parameters:
+          - name: field
+            in: query
+            required: true
+            schema:
+              type: string
+            description: >-
+              An input field to return the suggested values and their occurrence
+              numbers.
+          - name: size
+            in: query
+            schema:
+              type: string
+            description: The maximum number of suggested values to return
+        operationId: suggestGet
+        responses:
+          default:
+            description: Default response
+        tags:
+          - metadata
+    /metakg:
+      get:
+        summary: Retrieve associations within smartapi, if no parameters provided, will return all associations.
+        parameters:
+          - in: query
+            name: subject
+            schema:
+              type: string
+            description: "Subject type of the metakg edge. Use biolink class types (see [biolink model](https://biolink.github.io/biolink-model/#classes-visualization))."
+            example: Gene
+          - in: query
+            name: object
+            schema:
+              type: string
+            description: "Object type of the metakg edge. Use biolink class types (see [biolink model](https://biolink.github.io/biolink-model/#classes-visualization))."
+            example: ChemicalSubstance
+          - in: query
+            name: predicate 
+            schema:
+              type: string
+            description: "Predicate type of the metakg edge. Use biolink predicate properties (see [biolink model](https://biolink.github.io/biolink-model/#predicates-visualization))."
+            example: physically_interacts_with
+          - in: query
+            name: size
+            schema:
+              type: integer
+            description: The size limit for graphml export. Default is 300, max limit is 5000. Use max limit for full export.
+            example: 5000
+          - in: query
+            name: download
+            schema:
+              type: boolean
+            description: Download the graphml file, default is True.
+            example: true
+          - in: query
+            name: expand
+            schema:
+              type: array
+              items:
                 type: string
-              smartapi:
-                type: object
-                properties:
-                  metadata:
-                    type: string
-                  ui:
-                    type: string
-                  id:
-                    type: string
-    PathsResponse:
-      type: object
-      properties:
-        paths:
-          type: array
-          items:
-            type: object
-            properties:
-              path:
-                type: array
-                items:
+                enum: ["subject", "object", "predicate", "node", "edge", "all"]
+            description: "Broaden the query to discover additional node and edge associations." 
+            example: subject,object
+          - in: query
+            name: default_view
+            schema:
+              type: string
+              enum: ["json", "cytoscape"]
+            description: The default view format for the response. Acceptable values are 'json' and 'cytoscape'. If not provided, 'cytoscape' is used as the default.
+            example: "cytoscape"
+          - in: query
+            name: header
+            schema:
+              type: boolean
+            description: Option to include headers in the response. If set to True, the response will include headers such as 'Content-Type' and 'Content-Disposition' (when downloading). Default is True.
+            example: true
+          - in: query
+            name: consolidated
+            schema:
+              type: boolean
+            description: This is a index setting, if set to True, the MetaKGConsoldiated index will be used, otherwise the MetaKG index will be used. Default is True.
+            example: true
+          - in: query
+            name: api_details
+            schema:
+              type: boolean
+            description: Option to display API details in the response. If set to True, the response will include API details. Default is False.
+            example: false
+          - in: query
+            name: bte
+            schema:
+              type: boolean
+            description: Option to display the BTE (BioThings Explorer) details in the response. If set to True, the response will include BTE details. Default is False.
+            example: false
+        responses:
+          '200':
+            description: Association information including subject, object, predicate, api, provided_by and smartapi info.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/MetakgResponse'
+        tags:
+          - metakg
+    /metakg/paths/:
+      get:
+        summary: Query and retrieve paths in a knowledge graph using MetaKGPathFinder.
+        parameters:
+          - in: query
+            name: subject
+            schema:
+              type: string
+            required: true
+            description: >-
+              The subject node to start the path from in the knowledge graph.
+              Use biolink class types (see [biolink model](https://biolink.github.io/biolink-model/#classes-visualization)).
+            example: "Gene"
+          - in: query
+            name: object
+            schema:
+              type: string
+            required: true
+            description: >-
+              The object node to end the path at in the knowledge graph.
+              Use biolink class types (see [biolink model](https://biolink.github.io/biolink-model/#classes-visualization)).
+            example: "Disease"
+          - in: query
+            name: predicate
+            schema:
+              type: array
+              items:
+                type: string
+            description: >-
+              The predicate types to traverse in the knowledge graph.
+              Use biolink predicate properties (see [biolink model](https://biolink.github.io/biolink-model/#predicates-visualization)).
+            example: related_to,treats
+          - in: query
+            name: cutoff
+            schema:
+              type: integer
+            description: The maximum length of the paths to retrieve, default is 3. Max limit is 5.
+            example: 3
+          - in: query
+            name: rawquery
+            schema:
+              type: boolean
+            description: >-
+              Option to view the query used to retrieve the paths.
+              If set to True, the response will display the query used to retrieve the paths and the parameters. 
+              Default is False.
+            example: false
+          - in: query
+            name: expand
+            schema:
+              type: array
+              items:
+                type: string
+                enum: ["subject", "object", "predicate", "node", "edge", "all"]
+            description: Broaden and expand the path query based on the given option to find additional node and edge paths.
+            example: subject,object
+          - in: query
+            name: api_details
+            schema:
+              type: boolean
+            description: Option to display API details in the response. If set to True, the response will include API details. Default is False.
+            example: false
+          - in: query
+            name: bte
+            schema:
+              type: boolean
+            description: Option to display the BTE (BioThings Explorer) details in the response. If set to True, the response will include BTE details. Default is False.
+            example: false
+        responses:
+          '200':
+            description: The paths in the knowledge graph
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/PathsResponse'
+        tags:
+          - metakg
+  components:
+    schemas:
+      MetakgResponse:
+        description: Array of all associations
+        type: array
+        items:
+          type: object
+          properties:
+            subject:
+              type: string
+            object:
+              type: string
+            predicate:
+              type: string
+            provided_by:
+              type: string
+            api:
+              type: object
+              properties:
+                name:
                   type: string
-              edges:
-                type: array
-                items:
+                smartapi:
                   type: object
                   properties:
-                    subject:
+                    metadata:
                       type: string
-                    object:
+                    ui:
                       type: string
-                    predicate:
+                    id:
                       type: string
-                    api:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          api:
-                            type: object
-                            properties:
-                              name:
-                                type: string
-                              smartapi:
-                                type: object
-                                properties:
-                                  id:
-                                    type: string
+      PathsResponse:
+        type: object
+        properties:
+          paths:
+            type: array
+            items:
+              type: object
+              properties:
+                path:
+                  type: array
+                  items:
+                    type: string
+                edges:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      subject:
+                        type: string
+                      object:
+                        type: string
+                      predicate:
+                        type: string
+                      api:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            api:
+                              type: object
+                              properties:
+                                name:
+                                  type: string
+                                smartapi:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
