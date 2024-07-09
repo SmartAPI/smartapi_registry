@@ -206,32 +206,23 @@
             name: subject
             schema:
               type: string
-            description: "Subject type of the metakg edge. Use biolink class types (see [biolink model](https://biolink.github.io/biolink-model/#classes-visualization))."
+            description: >-
+              Optional, subject type of the metakg edge. Use biolink class types (see [biolink model](https://biolink.github.io/biolink-model/#classes-visualization)).
             example: Gene
           - in: query
             name: object
             schema:
               type: string
-            description: "Object type of the metakg edge. Use biolink class types (see [biolink model](https://biolink.github.io/biolink-model/#classes-visualization))."
+            description: >- 
+              Optional, object type of the metakg edge. Use biolink class types (see [biolink model](https://biolink.github.io/biolink-model/#classes-visualization)).
             example: ChemicalSubstance
           - in: query
             name: predicate 
             schema:
               type: string
-            description: "Predicate type of the metakg edge. Use biolink predicate properties (see [biolink model](https://biolink.github.io/biolink-model/#predicates-visualization))."
+            description: >-
+              Optional, predicate type of the metakg edge. Use biolink predicate properties (see [biolink model](https://biolink.github.io/biolink-model/#predicates-visualization)).
             example: physically_interacts_with
-          - in: query
-            name: size
-            schema:
-              type: integer
-            description: The size limit for graphml export. Default is 300, max limit is 5000. Use max limit for full export.
-            example: 5000
-          - in: query
-            name: download
-            schema:
-              type: boolean
-            description: Download the graphml file, default is True.
-            example: true
           - in: query
             name: expand
             schema:
@@ -239,38 +230,85 @@
               items:
                 type: string
                 enum: ["subject", "object", "predicate", "node", "edge", "all"]
-            description: "Broaden the query to discover additional node and edge associations." 
+            description: >-
+              Optional, expand query to include additional query nodes or edges based on the biolink model hierarchical structure. Multiple values can be passed in and are represented by a comma separated value. 
             example: subject,object
-          - in: query
-            name: default_view
-            schema:
-              type: string
-              enum: ["json", "cytoscape"]
-            description: The default view format for the response. Acceptable values are 'json' and 'cytoscape'. If not provided, 'cytoscape' is used as the default.
-            example: "cytoscape"
-          - in: query
-            name: header
-            schema:
-              type: boolean
-            description: Option to include headers in the response. If set to True, the response will include headers such as 'Content-Type' and 'Content-Disposition' (when downloading). Default is True.
-            example: true
-          - in: query
-            name: consolidated
-            schema:
-              type: boolean
-            description: This is a index setting, if set to True, the MetaKGConsoldiated index will be used, otherwise the MetaKG index will be used. Default is True.
-            example: true
           - in: query
             name: api_details
             schema:
               type: boolean
-            description: Option to display API details in the response. If set to True, the response will include API details. Default is False.
+            description: >-
+              Optional, used to display API details in the response. If set to True, the response will include more information about the api. Default: False.
             example: false
           - in: query
             name: bte
             schema:
               type: boolean
-            description: Option to display the BTE (BioThings Explorer) details in the response. If set to True, the response will include BTE details. Default is False.
+              default: false
+            description: >-
+              Optional, used to display the BTE (BioThings Explorer) details in the response. If set to True, the response will include BTE information.
+            example: true
+          - in: query
+            name: consolidated
+            schema:
+              type: boolean
+              default: true
+            description: >-
+              Optional, change to set the index to the MetaKG data index. The default index is the ConsolidatedMetaKG data index.
+            example: true
+          - in: query
+            name: size
+            schema:
+              type: integer
+              default: 10
+            description: >- 
+              Optional, the maximum number of matching hits to return (with a cap of 1000 at the moment). The combination of "size" and "from" parameters can be used to get paging for a large query.
+            example: 500
+          - in: query
+            name: from
+            schema:
+              type: integer
+              default: 0
+            description: >- 
+              Optional, the number of matching hits to skip, starting from 0.
+          - in: query
+            name: format
+            schema:
+              type: string
+              default: json
+              enum: 
+                - json
+                - yaml
+                - html
+                - msgpack
+                - graphml
+            description: >-
+              Optional, will change the format of the response data.
+            example: graphml
+          - in: query
+            name: default_view
+            schema:
+              type: string
+              default: cytoscape
+              enum: ["json", "cytoscape"]
+            description: >-
+              Opional, if format=html is set, this flag is used to change the default html format view.
+            example: "cytoscape"
+          - in: query
+            name: header
+            schema:
+              type: boolean
+              default: true
+            description: >-
+              Optional, if format=html is set, this flag is used to change the default html header information view. Default is true, which will display the header information.
+            example: false
+          - in: query
+            name: download
+            schema:
+              type: boolean
+              default: true
+            description: >-
+              Optional, if format=graphml is set, change the default file download of the graphml file.
             example: false
         responses:
           '200':
@@ -314,40 +352,45 @@
               Use biolink predicate properties (see [biolink model](https://biolink.github.io/biolink-model/#predicates-visualization)).
             example: related_to,treats
           - in: query
-            name: cutoff
-            schema:
-              type: integer
-            description: The maximum length of the paths to retrieve, default is 3. Max limit is 5.
-            example: 3
-          - in: query
-            name: rawquery
-            schema:
-              type: boolean
-            description: >-
-              Option to view the query used to retrieve the paths.
-              If set to True, the response will display the query used to retrieve the paths and the parameters. 
-              Default is False.
-            example: false
-          - in: query
             name: expand
             schema:
               type: array
               items:
                 type: string
                 enum: ["subject", "object", "predicate", "node", "edge", "all"]
-            description: Broaden and expand the path query based on the given option to find additional node and edge paths.
+            description: >-
+              Expand query to include additional query nodes or edges based on the biolink model hierarchical structure. Multiple values can be passed in and are represented by a comma separated value.
             example: subject,object
+          - in: query
+            name: cutoff
+            schema:
+              type: integer
+              default: 3
+            description: >- 
+              The maximum length of the paths to retrieve, default is 3. Max limit is 5.
+            example: 3
           - in: query
             name: api_details
             schema:
               type: boolean
-            description: Option to display API details in the response. If set to True, the response will include API details. Default is False.
+            description: >-
+              Optional, used to display API details in the response. If set to True, the response will include more information about the api. Default: False.
             example: false
           - in: query
             name: bte
             schema:
               type: boolean
-            description: Option to display the BTE (BioThings Explorer) details in the response. If set to True, the response will include BTE details. Default is False.
+              default: false
+            description: >-
+              Optional, used to display the BTE (BioThings Explorer) details in the response. If set to True, the response will include BTE information.
+          - in: query
+            name: rawquery
+            schema:
+              type: boolean
+              default: false
+            description: >-
+              Option to view the query used to retrieve the paths.
+              If set to True, the response will display the query used to retrieve the paths and the parameters.
             example: false
         responses:
           '200':
@@ -425,4 +468,4 @@
                                   type: object
                                   properties:
                                     id:
-                                      type: string
+                                      type: string  
