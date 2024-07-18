@@ -1,0 +1,247 @@
+openapi: 3.0.0
+info:
+  title: MetGENE REST API
+  version: "1.0.0"
+  description: |
+    The MetGENE REST service enables access to a variety of data (including reactions, metabolites and studies for a certain gene or list of genes) using HTTP requests. These requests may be carried out using a web browser or may be embedded in 3rd party applications or scripts to enable programmatic access. Most modern programming languages including PHP, Perl, Python, Java and Javascript have the capability to create HTTP request and interact with datasets such as this REST service.
+  license:
+    name: Terms of Use
+    url: https://bdcw.org/MetGENE/termsofuse.php
+  contact:
+    name: Contact
+    url: https://bdcw.org/MetGENE/contact.php
+servers:
+  - description: MetGENE
+    url: https://bdcw.org/MetGENE/rest
+paths:
+  /reactions/species/{species_id}/GeneIDType/{geneID_type}/GeneInfoStr/{gene_ID}/anatomy/NA/disease/NA/phenotype/NA/viewType/{vtf}:
+    get:
+      description: Fetch all the reactions for a given species, gene or list of genes. Anatomy, disease and phenotype inputs are not needed as reactions are not specific for these.
+      parameters:
+      - in: path
+        name: species_id
+        description: The unique species name or identifier 
+        schema:
+          type: string
+        example: hsa
+        required: true
+      - in: path
+        name: geneID_type
+        description: The unique Gene ID type like ENTREZID, SYMBOL, SYMBOL_OR_ALIAS, UNIPROT, ENSEMBL or REFSEQ
+        schema:
+          type: string
+        example: SYMBOL
+        required: true
+      - in: path
+        name: gene_ID
+        description: The unigue gene identifier in any one of the known formats or double tab separated list of identifiers
+        schema:
+          type: string
+          example: HK1
+        required: true
+      - in: path
+        name: vtf
+        description: Media type e.g. json or txt
+        schema:
+          type: string
+          example: json or txt 
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Gene:
+                    type: string
+                    description: Entrez Gene ID
+                  KEGG_REACTION_ID:
+                    type: string
+                    description: KEGG Reaction IDs
+                  KEGG_REACTION_NAME:
+                    type: string
+                    description: Verbose KEGG reaction name
+                  KEGG_REACTION_EQN:
+                    type: string
+                    description: KEGG Reaction Equation
+            text/plain:
+              schema:
+                type: string
+                example: pong
+          x-responseValueType:
+          - x-path: gene_id
+            x-valueType: https://identifiers.org/ncbigene
+          - x-path: KEGG_REACTION_ID
+            x-valueType: https://www.genome.jp/kegg/reaction/
+          - x-path: KEGG_REACTION_NAME
+            x-valueType: https://www.genome.jp/kegg/reaction/
+  /metabolites/species/{species_id}/GeneIDType/{geneID_type}/GeneInfoStr/{gene_ID}/anatomy/{anatomy_name}/disease/{disease_name}/phenotype/{phenotype_name}/viewType/{vtf}:
+    get:
+      description: Fetch all the metabolites for a given species, gene or list of genes, anatomy or tissue type, disease and phenotype.
+      parameters:
+      - in: path
+        name: species_id
+        description: The unique species name or identifier  like hsa, Human, mmu, Mouse.
+        schema:
+          type: string
+        example: hsa
+        required: true
+      - in: path
+        name: geneID_type
+        description: The unique Gene ID type like ENTREZID, SYMBOL, SYMBOL_OR_ALIAS, UNIPROT, ENSEMBL or REFSEQ
+        schema:
+          type: string
+        example: SYMBOL
+        required: true
+      - in: path
+        name: gene_ID
+        description: The unigue gene identifier (e.g. 3098) in any one of the known formats (e.g. ENTREZID ) or double underscore separated list of identifiers (3098__6120)
+        schema:
+          type: string
+          example: HK1
+        required: true
+      - in: path
+        name: anatomy_name
+        description: The anatomy or tissue name (e.g. Blood, Lung, Liver)
+        schema:
+          type: string
+          example: Blood or NA (for unspecified)
+        required: true
+      - in: path
+        name: disease_name
+        description: The disease name (e.g. Diabetes, Fatty liver disease)
+        schema:
+          type: string
+          example: Diabetes or NA (for unspecified)
+        required: true
+      - in: path
+        name: phenotype_name
+        description: The phenotype name (e.g. BMI)
+        schema:
+          type: string
+          example: BMI or NA (for unspecified)
+        required: true
+      - in: path
+        name: vtf
+        description: Media type e.g. json or txt
+        schema:
+          type: string
+          example: json or txt 
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Gene:
+                    type: string
+                    description: Entrez Gene ID
+                  KEGG_COMPOUND_ID:
+                    type: string
+                    description: KEGG Compound IDs
+                  REFMET_NAME:
+                    type: string
+                    description: Metabolomics Workbench RefMet name
+                  KEGG_REACTION_ID:
+                    type: string
+                    description: KEGG Reaction IDs
+                  METSTAT_LINK:
+                    type: string
+                    description: Link to metabolite statistics in Metabolomics Workbench
+            text/plain:
+              schema:
+                type: string
+                example: pong
+          x-responseValueType:
+          - x-path: gene_id
+            x-valueType: https://identifiers.org/ncbigene
+          - x-path: KEGG_COMPOUND_ID
+            x-valueType: https://www.genome.jp/kegg/compound/
+          - x-path: REFMET_NAME
+            x-valueType: https://www.metabolomicsworkbench.org/databases/refmet/index.php
+          - x-path: KEGG_REACTION_ID
+            x-valueType: https://www.genome.jp/kegg/reaction/
+  /studies/species/{species_id}/GeneIDType/{geneID_type}/GeneInfoStr/{gene_ID}/anatomy/{anatomy_name}/disease/{disease_name}/phenotype/{phenotype_name}/viewType/{vtf}:
+    get:
+      description: Fetch all the studies in the Metabolomics Workbench for a given species, gene or list of genes, anatomy or tissue type, disease and phenotype.
+      parameters:
+      - in: path
+        name: species_id
+        description: The unique species name or identifier  like hsa, Human, mmu, Mouse.
+        schema:
+          type: string
+        example: hsa
+        required: true
+      - in: path
+        name: geneID_type
+        description: The unique Gene ID type like ENTREZID, SYMBOL, SYMBOL_OR_ALIAS, UNIPROT, ENSEMBL or REFSEQ
+        schema:
+          type: string
+        example: SYMBOL
+        required: true
+      - in: path
+        name: gene_ID
+        description: The unigue gene identifier (e.g. 3098) in any one of the known formats (e.g. ENTREZID ) or double tab separated list of identifiers (3098__6120) 
+        schema:
+          type: string
+          example: HK1
+        required: true
+      - in: path
+        name: anatomy_name
+        description: The anatomy or tissue name (e.g. Blood, Lung, Liver)
+        schema:
+          type: string
+          example: Blood or NA (for unspecified)
+        required: true
+      - in: path
+        name: disease_name
+        description: The disease name (e.g. Diabetes, Fatty liver disease)
+        schema:
+          type: string
+          example: Diabetes or NA (for unspecified)
+        required: true
+      - in: path
+        name: phenotype_name
+        description: The phenotype name (e.g. BMI)
+        schema:
+          type: string
+          example: BMI or NA (for unspecified)
+        required: true
+      - in: path
+        name: vtf
+        description: Media type e.g. json or txt
+        schema:
+          type: string
+          example: json or txt 
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  KEGG_COMPOUND_ID:
+                    type: string
+                    description: KEGG Compound IDs
+                  REFMET_NAME:
+                    type: string
+                    description: Metabolomics Workbench unique Refmet name
+                  STUDY_ID:
+                    type: string
+                    description: A unique identifier for the study
+            text/plain:
+              schema:
+                type: string
+                example: pong
+          x-responseValueType:
+          - x-path: KEGG_COMPOUND_ID
+            x-valueType: https://www.genome.jp/kegg/compound/
+          - x-path: REFMET_NAME
+            x-valueType: https://www.metabolomicsworkbench.org/databases/refmet/index.php
