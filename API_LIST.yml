@@ -10,3 +10,6 @@ APIs:
   - metadata: MetGENE_API/MetGENEAPI_openapi.yml
     extra:
         - notes: ""
+  - metadata: MetGENEAPI/MetGENEAPI_openapi.yml
+    extra:
+        - notes: ""
