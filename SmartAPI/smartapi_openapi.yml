@@ -207,14 +207,14 @@ paths:
           schema:
             type: string
           description: >-
-            Optional, subject type of the metakg edge. Use biolink class types (see [biolink model](https://biolink.github.io/biolink-model/#classes-visualization)). i.e. Gene
+            Optional, subject type of the metakg edge. Use biolink class types (see [biolink model](https://biolink.github.io/biolink-model/#classes-visualization)). i.e. "Gene"
           example: Gene
         - in: query
           name: object
           schema:
             type: string
           description: >- 
-            Optional, object type of the metakg edge. Use biolink class types (see [biolink model](https://biolink.github.io/biolink-model/#classes-visualization)). i.e. Molecular Activity
+            Optional, object type of the metakg edge. Use biolink class types (see [biolink model](https://biolink.github.io/biolink-model/#classes-visualization)). i.e. "Molecular Activity"
           example: Molecular Activity
         - in: query
           name: predicate
@@ -230,7 +230,7 @@ paths:
               type: string
               enum: ["subject", "object", "predicate", "node", "edge", "all"]
           description: >-
-            Optional, expand query to include additional query nodes or edges based on the biolink model hierarchical structure. Multiple values can be passed in and are represented by a comma separated value, i.e "subject,object"
+            Optional, expand query to include additional query nodes or edges based on the biolink model hierarchical structure. Multiple values can be passed in and are represented by a comma separated value, i.e "subject,object". Optional parameters: "subject", "object", "predicate", "node", "edge", "all".
         - in: query
           name: api_details
           schema:
@@ -274,14 +274,14 @@ paths:
           description: >-
             Optional, will change the format of the response data. Default: json.
         - in: query
-          name: default_view
+          name: html_view
           schema:
             type: string
             enum: ["json", "cytoscape"]
           description: >-
             Opional, if format=html is set, this flag is used to change the default html format view. Default: cytoscape.
         - in: query
-          name: header
+          name: html_header
           schema:
             type: boolean
           description: >-
@@ -312,7 +312,7 @@ paths:
           required: true
           description: >-
             The subject node to start the path from in the knowledge graph.
-            Use biolink class types (see [biolink model](https://biolink.github.io/biolink-model/#classes-visualization)). i.e. BiologicalProcessOrActivity
+            Use biolink class types (see [biolink model](https://biolink.github.io/biolink-model/#classes-visualization)). i.e. "BiologicalProcessOrActivity"
           example: "BiologicalProcessOrActivity"
         - in: query
           name: object
@@ -321,7 +321,7 @@ paths:
           required: true
           description: >-
             The object node to end the path at in the knowledge graph.
-            Use biolink class types (see [biolink model](https://biolink.github.io/biolink-model/#classes-visualization)). i.e. ClinicalFinding
+            Use biolink class types (see [biolink model](https://biolink.github.io/biolink-model/#classes-visualization)). i.e. "ClinicalFinding"
           example: "ClinicalFinding"
         - in: query
           name: predicate
@@ -329,13 +329,13 @@ paths:
             type: string
           description: >-
             The predicate types to traverse in the knowledge graph.
-            Use biolink predicate properties (see [biolink model](https://biolink.github.io/biolink-model/#predicates-visualization)). i.e 'treats, related to'
+            Use biolink predicate properties (see [biolink model](https://biolink.github.io/biolink-model/#predicates-visualization)). i.e "treats,related_to"
         - in: query
           name: expand
           schema:
             type: string
           description: >-
-            Expand query to include additional query nodes or edges based on the biolink model hierarchical structure. Multiple values can be passed in and are represented by a comma separated value. Optional parameters: "subject", "object", "predicate", "node", "edge", "all". i.e. 'subject,object'
+            Expand query to include additional query nodes or edges based on the biolink model hierarchical structure. Multiple values can be passed in and are represented by a comma separated value, i.e. "subject,object". Optional parameters: "subject", "object", "predicate", "node", "edge", "all". 
         - in: query
           name: cutoff
           schema:
