@@ -402,7 +402,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ParseResponse'
+                $ref: '#/components/schemas/MetakgResponse'
       tags:
         - metakg
     post:
@@ -435,7 +435,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ParseResponse'
+                $ref: '#/components/schemas/MetakgResponse'
       tags:
         - metakg
 components:
@@ -506,31 +506,3 @@ components:
                                 properties:
                                   id:
                                     type: string  
-    ParseResponse:
-      description: Array of all associations
-      type: array
-      items:
-        type: object
-        properties:
-          subject:
-            type: string
-          object:
-            type: string
-          predicate:
-            type: string
-          provided_by:
-            type: string
-          api:
-            type: object
-            properties:
-              name:
-                type: string
-              smartapi:
-                type: object
-                properties:
-                  metadata:
-                    type: string
-                  ui:
-                    type: string
-                  id:
-                    type: string
