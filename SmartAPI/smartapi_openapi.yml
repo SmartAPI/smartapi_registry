@@ -429,11 +429,18 @@ paths:
             schema:
               type: object
               description: Parsed metadata JSON object in a list.
+          application/yaml:
+            schema:
+              type: object
+              description: Parsed metadata YAML object in a list.
       responses:
         200:
           description: Successfully parsed metadata.
           content:
             application/json:
+              schema:
+                $ref: '#/components/schemas/MetakgResponse'
+            application/yaml:
               schema:
                 $ref: '#/components/schemas/MetakgResponse'
       tags:
