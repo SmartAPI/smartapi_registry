@@ -370,6 +370,81 @@ paths:
                 $ref: '#/components/schemas/PathsResponse'
       tags:
         - metakg
+  /metakg/parse:
+    get:
+      summary: Parse metadata from its URL.
+      parameters:
+        - name: url
+          in: query
+          required: true
+          schema:
+            type: string
+            maxLength: 1000
+          description: Metadata url for API document to be parsed. *Required*.
+          example: "https://raw.githubusercontent.com/NCATS-Tangerine/translator-api-registry/master/mygene.info/openapi_full.yml"
+        - name: api_details
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: >-
+            Optional, used to display API details in the response. If set to true, the response will include more information about the api. Default: false.
+        - name: bte
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: >-
+            Optional, used to display the BTE (BioThings Explorer) details in the response. If set to true, the response will include BTE information. Default: false.
+      responses:
+        200:
+          description: Successfully parsed metadata.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetakgResponse'
+      tags:
+        - metakg
+    post:
+      summary: Parse metadata from a given request body.
+      parameters:
+        - name: api_details
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: >-
+            Optional, used to display API details in the response. If set to true, the response will include more information about the api. Default: false.
+        - name: bte
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: >-
+            Optional, used to display the BTE (BioThings Explorer) details in the response. If set to true, the response will include BTE information. Default: false.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Parsed metadata JSON object in a list.
+          application/yaml:
+            schema:
+              type: object
+              description: Parsed metadata YAML object in a list.
+      responses:
+        200:
+          description: Successfully parsed metadata.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetakgResponse'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/MetakgResponse'
+      tags:
+        - metakg
 components:
   schemas:
     MetakgResponse:
